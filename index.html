@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exploratory Analyses Inspired by the Van Haren Lab</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: Georgia, 'Times New Roman', serif; font-size: 18px; line-height: 1.65; color: #1a1a1a; background: #fff; padding: 0 1rem; }
+.page { max-width: 680px; margin: 0 auto; padding: 3rem 0 5rem; }
+h1 { font-size: 1.5rem; line-height: 1.25; font-weight: bold; margin-bottom: 0.4rem; }
+h2 { font-size: 1.1rem; font-weight: bold; margin: 2.4rem 0 0.5rem; }
+p  { margin-bottom: 1rem; }
+a  { color: #1a1a1a; }
+.byline { color: #555; font-size: 0.9rem; margin-bottom: 2.4rem; font-family: system-ui, sans-serif; line-height: 1.6; }
+hr { border: none; border-top: 1px solid #ddd; margin: 2.4rem 0; }
+.section-nav { font-family: system-ui, sans-serif; font-size: 0.82rem; color: #888; margin-bottom: 2.4rem; }
+.section-nav a { color: #555; margin-right: 1rem; text-decoration: none; }
+.experiment { border-left: 3px solid #1a1a1a; padding-left: 1.2rem; margin: 1.5rem 0; }
+.exp-label { font-family: system-ui, sans-serif; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: #777; margin-bottom: 0.3rem; }
+.exp-title { font-weight: bold; font-size: 1rem; margin-bottom: 0.6rem; }
+.metric-row { display: flex; gap: 2rem; margin: 1rem 0; flex-wrap: wrap; font-family: system-ui, sans-serif; }
+.metric { display: flex; flex-direction: column; }
+.metric-val { font-size: 1.4rem; font-weight: bold; line-height: 1; }
+.metric-desc { color: #666; font-size: 0.8rem; margin-top: 0.15rem; }
+.label-inline { font-family: system-ui, sans-serif; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.07em; color: #888; margin: 0.4rem 0; display: block; }
+figcaption { font-family: system-ui, sans-serif; font-size: 0.78rem; color: #777; margin-top: 0.6rem; line-height: 1.45; }
+.panel { border: 1px solid #e0e0e0; border-radius: 3px; padding: 1rem 1.1rem; margin: 1rem 0; background: #fcfcfc; }
+.searchbar { display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin-bottom:0.6rem; }
+.searchbar input { background:#fff; border:1px solid #bcc6d0; border-radius:5px; padding:9px 13px; font-family:system-ui,sans-serif; font-size:0.95rem; width:220px; }
+.searchbar input:focus { outline:2px solid #2f7d5f; border-color:#2f7d5f; }
+.searchbar button { background:#2f7d5f; color:#fff; border:none; border-radius:5px; padding:9px 16px; font-family:system-ui,sans-serif; font-size:0.88rem; cursor:pointer; }
+.chips { font-family: system-ui, sans-serif; font-size:0.78rem; color:#777; margin-bottom:0.4rem; }
+.chips a { color:#2f7d5f; cursor:pointer; text-decoration:none; border-bottom:1px dotted; margin:0 0.5rem 0.3rem 0; display:inline-block; }
+svg.viz { width:100%; max-width:600px; display:block; margin:0 auto; }
+.readout { font-family: system-ui, sans-serif; font-size:0.86rem; background:#e9f2ee; border-radius:4px; padding:0.65rem 0.9rem; margin-top:0.7rem; line-height:1.5; }
+.readout b { color:#2f7d5f; }
+.legend { display:flex; gap:16px; font-family:system-ui,sans-serif; font-size:0.76rem; color:#555; margin-top:8px; justify-content:center; flex-wrap:wrap; }
+.legend span::before { content:''; display:inline-block; width:10px; height:10px; border-radius:50%; margin-right:5px; vertical-align:middle; background:var(--c,#999); }
+.bars { font-family:system-ui,sans-serif; font-size:0.8rem; }
+.brow { display:flex; align-items:center; gap:8px; margin:3px 0; cursor:pointer; }
+.brow:hover .bfill { opacity:0.8; }
+.bname { width:70px; text-align:right; flex-shrink:0; color:#444; font-size:0.78rem; }
+.btrack { flex:1; position:relative; height:16px; background:#eef1f0; border-radius:2px; }
+.bfill { position:absolute; left:0; top:0; height:100%; border-radius:2px; }
+.bnum { width:96px; flex-shrink:0; font-size:0.71rem; color:#666; }
+footer { font-family: system-ui, sans-serif; font-size: 0.82rem; color: #888; margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid #eee; line-height: 1.6; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <h1>Exploratory Analyses Inspired by the Van Haren Lab</h1>
+  <div class="byline">
+    Cathy Liu &nbsp;&middot;&nbsp; Computational Neurometabolism &nbsp;&middot;&nbsp; cathyliu014@gmail.com<br>
+    Prepared for the Van Haren Lab, Stanford Neurology and Neurological Sciences<br>
+    Personal exploratory project, July 2026
+  </div>
+
+  <div class="section-nav">
+    <a href="#motivation">Motivation</a>
+    <a href="#a1">Developmental explorer</a>
+    <a href="#a2">The childhood surge</a>
+    <a href="#relevance">Relevance</a>
+  </div>
+
+  <p>
+    One of the questions animating the lab is why the risk of inflammatory brain injury in adrenoleukodystrophy
+    lines up so tightly with childhood. In the first years of life a young brain spends a large share of the body's
+    energy building myelin, and the lab studies this narrow window as a time of metabolic vulnerability, the years
+    when disorders like ALD and MS tend to set off demyelinating lesions.
+  </p>
+  <p>
+    I built a small tool over a public map of the developing human brain so you can look up any gene and see how its
+    level moves from early fetal life to adulthood, across 524 brain samples.
+  </p>
+
+  <hr id="motivation">
+
+  <h2>How it works</h2>
+  <p>
+    Each gene was measured in brain tissue at ages from 8 weeks after conception out to 40 years. Type a gene below
+    and the chart plots its level along that timeline, one point per age, with birth marked and the early-childhood
+    window shaded, so you can see whether it surges during the years when ALD tends to strike.
+  </p>
+
+  <hr id="a1">
+
+  <h2>Analysis 1 &mdash; Look up any gene across brain development</h2>
+  <div class="experiment">
+    <div class="exp-label">Method</div>
+    <div class="exp-title">Expression from fetal life to adulthood, per gene</div>
+    <p style="margin-top:0.6rem; font-size:0.92rem;">
+      Type a gene or click one of the suggestions. MBP and PLP1 build myelin. ABCD1 is the ALD gene and ACOX1 handles
+      the same very long chain fats inside the peroxisome. HMGCR builds the cholesterol that myelin needs, and TREM2
+      marks the microglia that clear it.
+    </p>
+  </div>
+
+  <div class="panel">
+    <div class="searchbar">
+      <input id="search" list="genelist" placeholder="e.g. MBP" autocomplete="off">
+      <datalist id="genelist"></datalist>
+      <button onclick="pick(document.getElementById('search').value)">Plot</button>
+    </div>
+    <div class="chips">Try:
+      <a onclick="pick('MBP')">MBP (myelin)</a><a onclick="pick('ABCD1')">ABCD1 (ALD gene)</a><a onclick="pick('ACOX1')">ACOX1</a><a onclick="pick('HMGCR')">HMGCR</a><a onclick="pick('PLP1')">PLP1</a><a onclick="pick('TREM2')">TREM2</a>
+    </div>
+    <svg id="scatter" class="viz" viewBox="0 0 600 380"></svg>
+    <div class="legend" id="legend"></div>
+    <div class="readout" id="readout"></div>
+    <figcaption>BrainSpan Atlas of the Developing Human Brain, 524 samples from 8 pcw to 40 years, RNA-seq. Values are log&#8322; RPKM averaged across the sampled brain regions at each age.</figcaption>
+  </div>
+
+  <div class="metric-row">
+    <div class="metric"><span class="metric-val">524</span><span class="metric-desc">brain samples</span></div>
+    <div class="metric"><span class="metric-val">8 pcw&ndash;40 y</span><span class="metric-desc">age range</span></div>
+    <div class="metric"><span class="metric-val" id="m-dir">early childhood</span><span class="metric-desc" id="m-dir-d">MBP surges here</span></div>
+  </div>
+
+  <hr id="a2">
+
+  <h2>Analysis 2 &mdash; Which genes surge in early childhood</h2>
+  <div class="experiment">
+    <div class="exp-label">Result</div>
+    <div class="exp-title">The genes that climb most as myelination begins</div>
+  </div>
+  <div class="panel">
+    <span class="label-inline">log&#8322; rise from the fetal baseline to the early-childhood peak, birth to 8 years &middot; click a bar to plot it</span>
+    <div class="bars" id="bars"></div>
+  </div>
+  <p>
+    The early-childhood surge is dominated by the machinery of myelin, the lipids it is built from, and the
+    peroxisomal handling of very long chain fats. This is the same metabolic load the lab points to when it asks why
+    ALD ignites in exactly these years, and why its lesions look so much like the ones in MS.
+  </p>
+
+  <hr id="relevance">
+
+  <h2>Why this matters for the lab</h2>
+  <p>
+    If the risk window for ALD is set by a metabolic peak, then the genes that define that peak are worth knowing one
+    by one. A developmental map lets you take any candidate, a peroxisomal transporter, a lipid enzyme, an immune
+    marker, and ask a single question: does it rise during the childhood window when the disease strikes. The same
+    view extends naturally to the lab's work comparing ALD and MS lesions and to its interest in how immune demand
+    competes with the growing brain.
+  </p>
+
+  <h2>What I would bring</h2>
+  <p>
+    My background is in computational neuroscience and high-dimensional biology. I am comfortable with developmental
+    transcriptomes, lipid and metabolic gene sets, and building interactive tools that make a large dataset
+    explorable. I would be glad to help connect the lab's metabolic questions to the tissue and the timeline where
+    they play out.
+  </p>
+
+  <h2>Methods note</h2>
+  <p style="font-size:0.9rem; color:#444;">
+    Data: BrainSpan Atlas of the Developing Human Brain, RNA-seq gene-level RPKM, 524 post-mortem samples spanning 8
+    weeks post conception to 40 years across multiple brain regions. For each gene, expression is averaged across the
+    regions sampled at each age and shown as log&#8322;(RPKM + 1). Genes with very low expression everywhere are left
+    out of the explorer. The early-childhood window is defined as birth to 8 years. This is a cross-section across
+    ages in different individuals, not a trajectory followed within one child.
+  </p>
+
+  <footer>
+    Cathy Liu &nbsp;&middot;&nbsp; cathyliu014@gmail.com &nbsp;&middot;&nbsp; 415-216-3799<br>
+    Epilepsy neurostimulation project, <a href="https://arxiv.org/abs/2606.04339">arXiv:2606.04339</a>
+  </footer>
+
+</div>
+
+<script src="data.js?v=1"></script>
+<script src="app.js?v=1"></script>
+</body>
+</html>
